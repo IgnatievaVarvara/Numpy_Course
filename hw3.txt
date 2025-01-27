@@ -1,0 +1,162 @@
+# 1. Привести различные способы создания объектов типа Series
+# Для создания Series можно использовать
+# - списки Python или массивы NumPy
+# - скалярные значение
+# - словари
+
+import pandas as pd
+import numpy as np
+
+# Список Python
+data_list = [1, 2, 3, 4, 5]
+data = pd.Series(data_list)
+print(data)
+
+# Массив NumPy
+data_array = np.array([10, 20, 30])
+data = pd.Series(data_array)
+print(data)
+
+# Скалярное значение
+scalar = 3
+data = pd.Series(scalar, index=[0, 1, 2])
+print(data)
+
+# Словарь
+data_dict = {'a': 1, 'b': 2, 'c': 3}
+data = pd.Series(data_dict)
+print(data)
+
+
+
+
+# 2. Привести различные способы создания объектов типа DataFrame
+# DataFrame. Способы создания
+
+# - через объекты Series
+
+s1 = pd.Series([1, 2, 3, 4])
+s2 = pd.Series([5, 6, 7, 8])
+
+# Создание DataFrame из Series
+df = pd.DataFrame({'A': s1, 'B': s2})
+print(df)
+
+
+# - списки словарей
+
+data = [
+    {'A': 1, 'B': 4},
+    {'A': 2, 'B': 5},
+    {'A': 3, 'B': 6}
+]
+
+df = pd.DataFrame(data)
+print(df)
+
+
+# - словари объектов Series
+
+s1 = pd.Series([1, 2, 3])
+s2 = pd.Series([4, 5, 6])
+data = {'A': s1, 'B': s2}
+df = pd.DataFrame(data)
+print(df)
+
+
+# - двумерный массив NumPy
+
+array = np.array([[1, 2], [3, 4], [5, 6]])
+df = pd.DataFrame(array, columns=['A', 'B'])
+print(df)
+
+
+# - структурированный массив Numpy
+
+structure_array = np.array([(1, 'A'), (2, 'B'), (3, 'C')], dtype=[('num', 'i4'), ('letter', 'U1')])
+
+df = pd.DataFrame(structure_array)
+print(df)
+
+
+
+
+# 3. Объедините два объекта Series с неодинаковыми множествами ключей (индексов) так, чтобы вместо NaN было установлено значение 1
+
+pop = pd.Series({
+    'city_1': 1001,
+    'city_2': 1002,
+    'city_3': 1003,
+    'city_41': 1004,
+    'city_51': 1005
+})
+
+area = pd.Series({
+    'city_1': 9991,
+    'city_2': 9992,
+    'city_3': 9993,
+    'city_42': 9994,
+    'city_52': 9995
+})
+
+data = pd.DataFrame({'area1': area, 'pop1': pop})
+
+print(data.fillna(1))
+
+
+
+
+# 4. Переписать пример с транслирование для DataFrame так, чтобы вычитание происходило по СТОЛБЦАМ
+
+rng = np.random.default_rng(1)
+A = rng.integers(0, 10, (3, 4))
+print(A)
+
+df = pd.DataFrame(A, columns=['a', 'b', 'c', 'd'])
+print(df)
+
+print(df.iloc[:, 0])
+print(df.sub(df.iloc[:, 0], axis=0))
+
+print(df.iloc[::2,0])
+print(df.sub(df.iloc[::2,0], axis=0))
+
+
+
+# 5. На примере объектов DataFrame продемонстрируйте использование методов ffill() и bfill()
+
+df = pd.DataFrame([
+    [1, 2, 3, np.nan, np.nan, np.nan],
+    [1, 2, 3, 4, 5, 6],
+    [1, np.nan, 3, np.nan, np.nan, 6]
+])
+print(df)
+
+# Применяем метод ffill()
+df_ffill = df.ffill()
+print("DataFrame после ffill:")
+print(df_ffill)
+
+# Применяем метод bfill()
+df_bfill = df.bfill()
+print("DataFrame после bfill:")
+print(df_bfill)
+
+
+Output:
+   0    1  2    3    4    5
+0  1  2.0  3  NaN  NaN  NaN
+1  1  2.0  3  4.0  5.0  6.0
+2  1  NaN  3  NaN  NaN  6.0
+
+DataFrame после ffill:     
+   0    1  2    3    4    5
+0  1  2.0  3  NaN  NaN  NaN
+1  1  2.0  3  4.0  5.0  6.0
+2  1  2.0  3  4.0  5.0  6.0
+
+DataFrame после bfill:
+   0    1  2    3    4    5
+0  1  2.0  3  4.0  5.0  6.0
+1  1  2.0  3  4.0  5.0  6.0
+2  1  NaN  3  NaN  NaN  6.0
