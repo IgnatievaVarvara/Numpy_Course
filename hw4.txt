@@ -2,6 +2,7 @@
 1. Разобраться как использовать мультииндексные ключи в данном примере
 
 import pandas as pd
+import numpy as np
 
 index = [
     ('city_1', 2010),
